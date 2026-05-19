@@ -167,17 +167,15 @@
             </label>
           </div>
         </div>
-      </div><!-- /charter-wrap -->
+      </div>
 
-      <!-- Bouton connexion -->
       <button class="btn-submit" id="btn-submit" onclick="handleLogin()" type="button">
         <span data-i18n="btn_login">Se connecter</span>
       </button>
 
-    </div><!-- /card-body -->
-  </div><!-- /card -->
+    </div>
+  </div>
 
-  <!-- ══ Modal mot de passe oublié ══ -->
   <div id="forgot-modal" class="modal-overlay" onclick="closeForgotModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-box">
       <div class="modal-icon">
@@ -198,14 +196,13 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <span data-i18n="footer_copy">© 2025 Établissement LaSalle — Tous droits réservés.</span><br/>
     <a href="#" data-i18n="footer_privacy">Politique de confidentialité</a> ·
     <a href="#" data-i18n="footer_contact">Contact DSI</a>
   </footer>
 
-</div><!-- /page-wrapper -->
+</div>
 
 <!-- ══════════════════════════════════════════
      JAVASCRIPT — i18n + interactions
@@ -691,37 +688,29 @@ const translations = {
 
 };
 
-/* ── État courant ── */
 let currentLang = 'fr';
 
-/* ── Appliquer la langue ── */
 function setLang(lang) {
   const t = translations[lang] || translations['fr'];
   currentLang = lang;
 
-  // Direction texte (arabe)
   document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
   document.title = t.page_title;
 
-  // Éléments [data-i18n]
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.textContent = t[key];
   });
 
-  // Placeholders [data-i18n-ph]
   document.querySelectorAll('[data-i18n-ph]').forEach(el => {
     const key = el.getAttribute('data-i18n-ph');
     if (t[key] !== undefined) el.placeholder = t[key];
   });
 
-  // Charte : pas de contenu HTML injecté (fichier PDF à télécharger)
-  // Vider les alertes
   hideAlert();
 }
 
-/* ── Modal mot de passe oublié ── */
 function showForgotModal(e) {
   e.preventDefault();
   const t = translations[currentLang] || translations['fr'];
@@ -738,7 +727,6 @@ function closeForgotModal(e) {
   }
 }
 
-/* ── Fermer avec Escape ── */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.getElementById('forgot-modal').classList.remove('open');
 });
@@ -759,7 +747,6 @@ function togglePassword() {
   }
 }
 
-/* ── Toggle charte ── */
 function toggleCharter() {
   const box = document.getElementById('charter-box');
   const toggle = document.getElementById('charter-toggle');
@@ -768,12 +755,10 @@ function toggleCharter() {
   toggle.setAttribute('aria-expanded', isOpen);
 }
 
-/* Accessibilité clavier pour le toggle */
 document.getElementById('charter-toggle').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCharter(); }
 });
 
-/* ── Alert helper ── */
 function showAlert(msg, type) {
   const el = document.getElementById('alert-box');
   el.textContent = msg;
@@ -786,7 +771,6 @@ function hideAlert() {
   el.textContent = '';
 }
 
-/* ── Validation / Connexion ── */
 function handleLogin() {
   const t = translations[currentLang] || translations['fr'];
   const username = document.getElementById('username').value.trim();
@@ -802,13 +786,11 @@ function handleLogin() {
 
   if (!charterChecked) {
     showAlert(t.err_charter, 'error');
-    // Ouvrir automatiquement la charte si elle est fermée
     const box = document.getElementById('charter-box');
     if (!box.classList.contains('open')) toggleCharter();
     return;
   }
 
-  // Simulation de connexion (remplacez par votre logique réelle)
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.querySelector('span').textContent = '⏳';
@@ -816,17 +798,14 @@ function handleLogin() {
   setTimeout(() => {
     btn.disabled = false;
     btn.querySelector('span').textContent = translations[currentLang].btn_login;
-    // Exemple d'erreur — remplacez par la redirection réelle
     showAlert(t.err_credentials, 'error');
   }, 1200);
 }
 
-/* ── Touche Entrée ── */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') handleLogin();
 });
 
-/* ── Init ── */
 setLang('fr');
 
 </script>
