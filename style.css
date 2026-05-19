@@ -1,13 +1,10 @@
 /* ============================================================
    PORTAIL SCOLAIRE — style.css
-   Aesthetic: Institutional refinement meets modern clarity
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-/* ---------- Variables — Palette LaSalle (extraites du logo) ---------- */
 :root {
-  /* Couleurs exactes logo LaSalle : rose #E1347E | jaune #F7B825 | vert #93C150 | bleu #1A70A7 */
   --clr-bg:         #f4f6fb;
   --clr-surface:    #ffffff;
   --clr-primary:    #1A70A7;
@@ -29,7 +26,6 @@
   --font-body:      'DM Sans', 'Segoe UI', sans-serif;
 }
 
-/* ---------- Reset & Base ---------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { font-size: 16px; scroll-behavior: smooth; }
@@ -47,7 +43,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------- Geometric Background ---------- */
 body::before {
   content: '';
   position: fixed;
@@ -70,7 +65,6 @@ body::after {
   z-index: 0;
 }
 
-/* ---------- Page wrapper ---------- */
 .page-wrapper {
   position: relative;
   z-index: 1;
@@ -82,7 +76,6 @@ body::after {
   padding: 32px 16px 24px;
 }
 
-/* ---------- Top bar ---------- */
 .topbar {
   width: 100%;
   max-width: 460px;
@@ -92,7 +85,6 @@ body::after {
   margin-bottom: 12px;
 }
 
-/* ---------- Language Selector ---------- */
 .lang-selector {
   display: flex;
   align-items: center;
@@ -129,7 +121,6 @@ body::after {
   pointer-events: none;
 }
 
-/* ---------- Card ---------- */
 .card {
   width: 100%;
   max-width: 460px;
@@ -146,7 +137,6 @@ body::after {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- Card Header ---------- */
 .card-header {
   background: linear-gradient(135deg, #1A70A7 0%, #105686 40%, #0d4a75 100%);
   padding: 36px 40px 28px;
@@ -158,7 +148,6 @@ body::after {
   overflow: hidden;
 }
 
-/* Orbe rose (coin bas-droit) */
 .card-header::before {
   content: '';
   position: absolute;
@@ -169,7 +158,6 @@ body::after {
   pointer-events: none;
 }
 
-/* Orbe jaune (coin haut-gauche) */
 .card-header::after {
   content: '';
   position: absolute;
@@ -180,7 +168,6 @@ body::after {
   pointer-events: none;
 }
 
-/* Orbe vert (milieu bas) */
 .card-header .header-orb-green {
   content: '';
   position: absolute;
@@ -192,7 +179,6 @@ body::after {
   pointer-events: none;
 }
 
-/* ---------- Logo ---------- */
 .logo-wrap {
   position: relative;
   z-index: 1;
@@ -205,7 +191,6 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Anneau multicolore inspiré des 4 couleurs du logo */
   box-shadow:
     0 4px 24px rgba(0,0,0,0.22),
     0 0 0 3px #ffffff,
@@ -246,7 +231,6 @@ body::after {
   text-transform: uppercase;
 }
 
-/* ---------- Accent bar (4 couleurs du logo) ---------- */
 .accent-bar {
   width: 100%;
   height: 5px;
@@ -260,7 +244,6 @@ body::after {
   100% { background-position: 250% 50%; }
 }
 
-/* ---------- Card Body ---------- */
 .card-body {
   padding: 36px 40px 32px;
 }
@@ -273,7 +256,6 @@ body::after {
   font-weight: 600;
 }
 
-/* ---------- Form ---------- */
 .form-group {
   margin-bottom: 18px;
 }
@@ -346,7 +328,6 @@ body::after {
 }
 .pw-toggle:hover { color: var(--clr-primary); }
 
-/* ---------- Form options (forgot only) ---------- */
 .form-options {
   display: flex;
   justify-content: flex-end;
@@ -354,7 +335,6 @@ body::after {
   margin: 4px 0 22px;
 }
 
-/* ---------- Modal ── Mot de passe oublié ---------- */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -460,7 +440,6 @@ body::after {
 }
 .forgot-link:hover { opacity: 1; text-decoration: underline; }
 
-/* ---------- Submit Button (dégradé 4 couleurs du logo) ---------- */
 .btn-submit {
   margin-top: 20px;
   width: 100%;
@@ -499,7 +478,6 @@ body::after {
 
 .btn-submit:active { transform: translateY(0); box-shadow: none; }
 
-/* Ligne scintillante sous le bouton */
 .btn-submit::after {
   content: '';
   position: absolute;
@@ -510,7 +488,6 @@ body::after {
 }
 .btn-submit:hover::after { left: 0; right: 0; }
 
-/* ---------- Alert messages ---------- */
 .alert {
   display: none;
   padding: 10px 14px;
@@ -523,7 +500,6 @@ body::after {
 .alert.error  { background: #fde8e8; color: var(--clr-error); border-left: 3px solid var(--clr-error); display: block; }
 .alert.success{ background: #e6f4ec; color: var(--clr-success); border-left: 3px solid var(--clr-success); display: block; }
 
-/* ---------- Charter section ---------- */
 .charter-wrap {
   margin-top: 30px;
   border-top: 1.5px solid var(--clr-border);
@@ -572,7 +548,6 @@ body::after {
 
 .charter-box.open { max-height: 200px; }
 
-/* ── Fichier + bouton télécharger ── */
 .charter-file-row {
   display: flex;
   align-items: center;
@@ -630,7 +605,6 @@ body::after {
 
 .btn-download svg { flex-shrink: 0; }
 
-/* Charter accept checkbox */
 .charter-accept {
   display: flex;
   align-items: flex-start;
@@ -649,7 +623,6 @@ body::after {
   cursor: pointer;
 }
 
-/* ---------- Footer ---------- */
 footer {
   margin-top: 24px;
   font-size: 0.75rem;
@@ -666,12 +639,10 @@ footer a {
 }
 footer a:hover { opacity: 1; text-decoration: underline; }
 
-/* ---------- Scrollbar ---------- */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--clr-bg); }
 ::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 4px; }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 520px) {
   .card-header { padding: 28px 24px 22px; }
   .card-body   { padding: 28px 24px 26px; }
