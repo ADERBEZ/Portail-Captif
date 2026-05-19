@@ -10,7 +10,7 @@
 
 <div class="page-wrapper">
 
-  <!-- ── Top bar : sélecteur de langue HORS de la card ── -->
+  <!-- ── Top bar : sélecteur de langue ── -->
   <div class="topbar">
     <div class="lang-selector">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none"
@@ -37,7 +37,6 @@
     </div>
   </div>
 
-  <!-- ── Card ── -->
   <div class="card" role="main">
 
     <!-- Header -->
@@ -158,15 +157,14 @@
               <span data-i18n="charter_dl">Télécharger</span>
             </a>
           </div>
-
-          <!-- Case à cocher -->
-          <div class="charter-accept">
-            <input type="checkbox" id="charter-check" />
-            <label for="charter-check" data-i18n="charter_accept">
-              J'ai lu et j'accepte la charte informatique de l'établissement.
-            </label>
-          </div>
         </div>
+      </div>
+      <!-- Case à cocher -->
+      <div class="charter-accept">
+        <input type="checkbox" id="charter-check" />
+        <label for="charter-check" data-i18n="charter_accept">
+          J'ai lu et j'accepte la charte informatique de l'établissement.
+        </label>
       </div>
 
       <button class="btn-submit" id="btn-submit" onclick="handleLogin()" type="button">
