@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -10,6 +10,7 @@
 
 <div class="page-wrapper">
 
+  <!-- ── Top bar : sélecteur de langue HORS de la card ── -->
   <div class="topbar">
     <div class="lang-selector">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none"
@@ -36,8 +37,10 @@
     </div>
   </div>
 
+  <!-- ── Card ── -->
   <div class="card" role="main">
 
+    <!-- Header -->
     <div class="card-header">
       <div class="logo-wrap">
         <div class="logo-circle">
@@ -51,13 +54,17 @@
 
     <div class="accent-bar"></div>
 
+    <!-- Body -->
     <div class="card-body">
       <h2 data-i18n="login_title">Connexion</h2>
 
+      <!-- Alert zone -->
       <div class="alert" id="alert-box" role="alert"></div>
 
+      <!-- Formulaire -->
       <div id="login-form">
 
+        <!-- Identifiant -->
         <div class="form-group">
           <label for="username" data-i18n="label_id">Identifiant</label>
           <div class="input-wrap">
@@ -73,6 +80,7 @@
           </div>
         </div>
 
+        <!-- Mot de passe -->
         <div class="form-group">
           <label for="password" data-i18n="label_pw">Mot de passe</label>
           <div class="input-wrap">
@@ -103,12 +111,14 @@
           </div>
         </div>
 
+        <!-- Mot de passe oublié -->
         <div class="form-options">
           <a href="#" class="forgot-link" data-i18n="forgot" onclick="showForgotModal(event)">Mot de passe oublié ?</a>
         </div>
 
-      </div>
+      </div><!-- /login-form -->
 
+      <!-- ══ Charte informatique ══ -->
       <div class="charter-wrap">
         <div class="charter-toggle" id="charter-toggle" onclick="toggleCharter()" role="button"
              tabindex="0" aria-expanded="false" aria-controls="charter-box">
@@ -128,6 +138,7 @@
 
         <div class="charter-box" id="charter-box">
 
+          <!-- Fichier à télécharger -->
           <div class="charter-file-row">
             <div class="charter-file-info">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
@@ -148,6 +159,7 @@
             </a>
           </div>
 
+          <!-- Case à cocher -->
           <div class="charter-accept">
             <input type="checkbox" id="charter-check" />
             <label for="charter-check" data-i18n="charter_accept">
@@ -155,15 +167,17 @@
             </label>
           </div>
         </div>
-      </div
+      </div><!-- /charter-wrap -->
 
+      <!-- Bouton connexion -->
       <button class="btn-submit" id="btn-submit" onclick="handleLogin()" type="button">
         <span data-i18n="btn_login">Se connecter</span>
       </button>
 
-    </div>
-  </div>
+    </div><!-- /card-body -->
+  </div><!-- /card -->
 
+  <!-- ══ Modal mot de passe oublié ══ -->
   <div id="forgot-modal" class="modal-overlay" onclick="closeForgotModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-box">
       <div class="modal-icon">
@@ -184,17 +198,21 @@
     </div>
   </div>
 
-
+  <!-- Footer -->
   <footer>
     <span data-i18n="footer_copy">© 2025 Établissement LaSalle — Tous droits réservés.</span><br/>
     <a href="#" data-i18n="footer_privacy">Politique de confidentialité</a> ·
     <a href="#" data-i18n="footer_contact">Contact DSI</a>
   </footer>
 
-</div>
+</div><!-- /page-wrapper -->
 
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT — i18n + interactions
+════════════════════════════════════════════ -->
 <script>
 
+/* ── Traductions ── */
 const translations = {
 
   fr: {
@@ -673,29 +691,37 @@ const translations = {
 
 };
 
+/* ── État courant ── */
 let currentLang = 'fr';
 
+/* ── Appliquer la langue ── */
 function setLang(lang) {
   const t = translations[lang] || translations['fr'];
   currentLang = lang;
 
+  // Direction texte (arabe)
   document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
   document.title = t.page_title;
 
+  // Éléments [data-i18n]
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (t[key] !== undefined) el.textContent = t[key];
   });
 
+  // Placeholders [data-i18n-ph]
   document.querySelectorAll('[data-i18n-ph]').forEach(el => {
     const key = el.getAttribute('data-i18n-ph');
     if (t[key] !== undefined) el.placeholder = t[key];
   });
 
+  // Charte : pas de contenu HTML injecté (fichier PDF à télécharger)
+  // Vider les alertes
   hideAlert();
 }
 
+/* ── Modal mot de passe oublié ── */
 function showForgotModal(e) {
   e.preventDefault();
   const t = translations[currentLang] || translations['fr'];
@@ -712,6 +738,7 @@ function closeForgotModal(e) {
   }
 }
 
+/* ── Fermer avec Escape ── */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') document.getElementById('forgot-modal').classList.remove('open');
 });
@@ -732,6 +759,7 @@ function togglePassword() {
   }
 }
 
+/* ── Toggle charte ── */
 function toggleCharter() {
   const box = document.getElementById('charter-box');
   const toggle = document.getElementById('charter-toggle');
@@ -740,10 +768,12 @@ function toggleCharter() {
   toggle.setAttribute('aria-expanded', isOpen);
 }
 
+/* Accessibilité clavier pour le toggle */
 document.getElementById('charter-toggle').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCharter(); }
 });
 
+/* ── Alert helper ── */
 function showAlert(msg, type) {
   const el = document.getElementById('alert-box');
   el.textContent = msg;
@@ -756,6 +786,7 @@ function hideAlert() {
   el.textContent = '';
 }
 
+/* ── Validation / Connexion ── */
 function handleLogin() {
   const t = translations[currentLang] || translations['fr'];
   const username = document.getElementById('username').value.trim();
@@ -771,11 +802,13 @@ function handleLogin() {
 
   if (!charterChecked) {
     showAlert(t.err_charter, 'error');
+    // Ouvrir automatiquement la charte si elle est fermée
     const box = document.getElementById('charter-box');
     if (!box.classList.contains('open')) toggleCharter();
     return;
   }
 
+  // Simulation de connexion (remplacez par votre logique réelle)
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.querySelector('span').textContent = '⏳';
@@ -783,14 +816,17 @@ function handleLogin() {
   setTimeout(() => {
     btn.disabled = false;
     btn.querySelector('span').textContent = translations[currentLang].btn_login;
+    // Exemple d'erreur — remplacez par la redirection réelle
     showAlert(t.err_credentials, 'error');
   }, 1200);
 }
 
+/* ── Touche Entrée ── */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') handleLogin();
 });
 
+/* ── Init ── */
 setLang('fr');
 
 </script>
