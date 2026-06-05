@@ -1,3 +1,4 @@
+[Uploading portailv1.01.html…]()
 # Portail-Captif
 
 *Le principe du portail captif est de permettre à une personne de se connecter à réseau Wi-Fi, sous conditions de fournir des identifiants (e-mail, nom, prénom…).*
@@ -11,3 +12,4 @@ J'ai ajouté les champs cachés `redirurl` et `zone`, renommé les champs en `au
 Le JavaScript ne fait plus que la vérification des champs vides + charte cochée : si tout est bon, il laisse pfSense traiter réellement l'authentification.
 
 
+Voici le [Code PC v1.01](https://drive.google.com/file/d/10qwJW5rhb8Wuup7cCVtwODqpnuOhXBMn/view?usp=sharing).
