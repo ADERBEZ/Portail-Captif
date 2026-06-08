@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">LaSalle — Portail Numérique Actif</title>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+      :root {
+        --clr-bg:         #f4f6fb;
+        --clr-surface:    #ffffff;
+        --clr-primary:    #1A70A7;
+        --clr-rose:       #E1347E;
+        --clr-yellow:     #F7B825;
+        --clr-green:      #93C150;
+        --clr-text:       #1c1f26;
+        --clr-muted:      #6b7280;
+        --clr-border:     #dde3ed;
+        --clr-input-bg:   #f5f7fb;
+        --radius:         10px;
+        --shadow-card:    0 8px 40px rgba(26,112,167,0.13), 0 1.5px 6px rgba(0,0,0,0.06);
+        --transition:     0.22s cubic-bezier(.4,0,.2,1);
+        --font-display:   'Playfair Display', Georgia, serif;
+        --font-body:      'DM Sans', 'Segoe UI', sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-size: 16px; scroll-behavior: smooth; }
+
+      body {
+        font-family: var(--font-body);
+        background: var(--clr-bg);
+        color: var(--clr-text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(135deg, rgba(26,112,167,0.06) 0%, transparent 50%),
+          linear-gradient(225deg, rgba(225,52,126,0.04) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::after {
+        content: '';
+        position: fixed;
+        top: -120px; right: -120px;
+        width: 420px; height: 420px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(147,193,80,0.07) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px 24px;
+      }
+
+      /* ── Top bar ── */
+      .topbar {
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .lang-selector {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      }
+      .lang-selector svg { color: var(--clr-primary); flex-shrink: 0; }
+      .lang-selector select {
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--clr-primary);
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding-right: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .lang-selector-arrow { color: var(--clr-muted); font-size: 0.65rem; pointer-events: none; }
+
+      /* ── Card ── */
+      .card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--clr-surface);
+        border-radius: 18px;
+        box-shadow: var(--shadow-card);
+        border: 1px solid rgba(212,217,226,0.7);
+        overflow: hidden;
+        animation: slideUp 0.55s cubic-bezier(.22,1,.36,1) both;
+      }
+
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ── Header ── */
+      .card-header {
+        background: linear-gradient(135deg, #1A70A7 0%, #105686 40%, #0d4a75 100%);
+        padding: 36px 40px 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-header::before {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: -50px;
+        width: 200px; height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(225,52,126,0.35) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .card-header::after {
+        content: '';
+        position: absolute;
+        top: -40px; left: -40px;
+        width: 160px; height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(247,184,37,0.30) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .logo-wrap { position: relative; z-index: 1; }
+      .logo-circle {
+        width: 92px; height: 92px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 24px rgba(0,0,0,0.22),
+          0 0 0 3px #ffffff,
+          0 0 0 6px #E1347E,
+          0 0 0 8px #F7B825,
+          0 0 0 10px #93C150,
+          0 0 0 12px #1A70A7;
+        overflow: hidden;
+      }
+      .logo-circle img {
+        width: 84px; height: 84px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+
+      .school-name { position: relative; z-index: 1; text-align: center; }
+      .school-name p {
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.90);
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* ── Accent bar ── */
+      .accent-bar {
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #E1347E 0%, #F7B825 33%, #93C150 66%, #1A70A7 100%);
+        background-size: 250%;
+        animation: shimmer 5s linear infinite;
+      }
+      @keyframes shimmer {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 250% 50%; }
+      }
+
+      /* ── Card body ── */
+      .card-body { padding: 40px 40px 36px; text-align: center; }
+
+      /* ── Icône connecté ── */
+      .status-icon {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(147,193,80,0.15) 0%, rgba(147,193,80,0.08) 100%);
+        border: 2.5px solid rgba(147,193,80,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        animation: popIn 0.5s cubic-bezier(.22,1,.36,1) 0.3s both;
+      }
+      @keyframes popIn {
+        from { opacity: 0; transform: scale(0.6); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+      .status-icon svg { color: var(--clr-green); }
+
+      /* Dot animé */
+      .status-dot-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin-bottom: 8px;
+      }
+      .status-dot {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: var(--clr-green);
+        box-shadow: 0 0 0 0 rgba(147,193,80,0.6);
+        animation: pulse-dot 2s infinite;
+      }
+      @keyframes pulse-dot {
+        0%   { box-shadow: 0 0 0 0 rgba(147,193,80,0.6); }
+        70%  { box-shadow: 0 0 0 8px rgba(147,193,80,0); }
+        100% { box-shadow: 0 0 0 0 rgba(147,193,80,0); }
+      }
+      .status-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--clr-green);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .card-body h2 {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        color: var(--clr-text);
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .card-body p.subtitle {
+        font-size: 0.88rem;
+        color: var(--clr-muted);
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+
+      /* ── Info box ── */
+      .info-box {
+        background: var(--clr-input-bg);
+        border: 1px solid var(--clr-border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+      }
+      .info-box svg { color: var(--clr-primary); flex-shrink: 0; }
+      .info-box-text { font-size: 0.84rem; color: var(--clr-muted); line-height: 1.5; }
+      .info-box-text strong { color: var(--clr-text); font-size: 0.90rem; display: block; margin-bottom: 2px; }
+
+      /* ── Bouton déconnexion ── */
+      .btn-logout {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #E1347E 0%, #c0254a 100%);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        position: relative;
+        overflow: hidden;
+        transition: box-shadow var(--transition), transform var(--transition), background var(--transition);
+        text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+      }
+      .btn-logout::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 55%);
+        pointer-events: none;
+      }
+      .btn-logout:hover {
+        background: linear-gradient(135deg, #c0254a 0%, #a01e3d 100%);
+        box-shadow: 0 6px 24px rgba(225,52,126,0.40);
+        transform: translateY(-2px);
+      }
+      .btn-logout:active { transform: translateY(0); box-shadow: none; }
+
+      /* ── Footer ── */
+      footer {
+        margin-top: 24px;
+        font-size: 0.75rem;
+        color: var(--clr-muted);
+        text-align: center;
+        line-height: 1.7;
+      }
+      footer a { color: var(--clr-primary); text-decoration: none; font-weight: 500; opacity: 0.8; }
+      footer a:hover { opacity: 1; text-decoration: underline; }
+
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: var(--clr-bg); }
+      ::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 4px; }
+
+      @media (max-width: 520px) {
+        .card-header { padding: 28px 24px 22px; }
+        .card-body   { padding: 32px 24px 28px; }
+        .card { border-radius: 14px; }
+      }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ── Top bar ── -->
+  <div class="topbar">
+    <div class="lang-selector">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10
+                 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <select id="lang-select" onchange="setLang(this.value)" aria-label="Langue / Language">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="en_us">🇺🇸 American English</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="pt">🇵🇹 Português</option>
+        <option value="nl">🇳🇱 Nederlands</option>
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ja">🇯🇵 日本語</option>
+      </select>
+      <span class="lang-selector-arrow">▼</span>
+    </div>
+  </div>
+
+  <div class="card" role="main">
+
+    <!-- ── Header ── -->
+    <div class="card-header">
+      <div class="logo-wrap">
+        <div class="logo-circle">
+          <img src="logo_lasalle_avi.jpg" alt="Logo LaSalle Avignon"
+               style="width:82px;height:82px;object-fit:contain;border-radius:50%;" />
+        </div>
+      </div>
+      <div class="school-name">
+        <p data-i18n="subtitle">PORTAIL CAPTIF NUMÉRIQUE</p>
+      </div>
+    </div>
+
+    <div class="accent-bar"></div>
+
+    <!-- ── Body ── -->
+    <div class="card-body">
+
+      <!-- Icône statut -->
+      <div class="status-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/>
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+      </div>
+
+      <!-- Indicateur live -->
+      <div class="status-dot-wrap">
+        <span class="status-dot"></span>
+        <span class="status-label" data-i18n="status_label">Connecté</span>
+      </div>
+
+      <h2 data-i18n="connected_title">Vous êtes connecté</h2>
+      <p class="subtitle" data-i18n="connected_msg">
+        Votre accès au réseau est actif. Vous pouvez naviguer librement.<br/>
+        Cliquez sur le bouton ci-dessous pour terminer votre session.
+      </p>
+
+      <!-- Info réseau -->
+      <div class="info-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M10.54 16.1a6 6 0 0 1 2.92 0"/>
+          <line x1="12" y1="20" x2="12.01" y2="20" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="info-box-text">
+          <strong data-i18n="info_title">Accès réseau actif</strong>
+          <span data-i18n="info_desc">Réseau LaSalle Avignon — Session en cours</span>
+        </div>
+      </div>
+
+      <!-- Formulaire de déconnexion pfSense -->
+      <form method="post" action="$PORTAL_ACTION$" onsubmit="handleLogout(this)">
+        <input type="hidden" name="logout_id" value="$PORTAL_LOGOUT_ID$" />
+        <input type="hidden" name="zone"      value="$PORTAL_ZONE$" />
+
+        <button type="submit" class="btn-logout" id="btn-logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7
+                     a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1"/>
+          </svg>
+          <span id="btn-logout-text" data-i18n="btn_logout">Se déconnecter</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <footer>
+    <span data-i18n="footer_copy">© 2025 Établissement LaSalle — Tous droits réservés.</span><br/>
+    <a href="#" data-i18n="footer_privacy">Politique de confidentialité</a> ·
+    <a href="#" data-i18n="footer_contact">Contact DSI</a>
+  </footer>
+
+</div>
+
+<script>
+const translations = {
+  fr: {
+    page_title:      "LaSalle — Portail Numérique Actif",
+    subtitle:        "PORTAIL NUMÉRIQUE ACTIF",
+    status_label:    "Connecté",
+    connected_title: "Vous êtes connecté",
+    connected_msg:   "Votre accès au réseau est actif. Vous pouvez naviguer librement.<br/>Cliquez sur le bouton ci-dessous pour terminer votre session.",
+    info_title:      "Accès réseau actif",
+    info_desc:       "Réseau LaSalle Avignon — Session en cours",
+    btn_logout:      "Se déconnecter",
+    btn_loading:     "Déconnexion…",
+    footer_copy:     "© 2025 Établissement LaSalle — Tous droits réservés.",
+    footer_privacy:  "Politique de confidentialité",
+    footer_contact:  "Contact DSI"
+  },
+  en: {
+    page_title:      "LaSalle — Active Digital Portal",
+    subtitle:        "ACTIVE DIGITAL PORTAL",
+    status_label:    "Connected",
+    connected_title: "You are connected",
+    connected_msg:   "Your network access is active. You can browse freely.<br/>Click the button below to end your session.",
+    info_title:      "Network access active",
+    info_desc:       "LaSalle Avignon Network — Session in progress",
+    btn_logout:      "Sign out",
+    btn_loading:     "Signing out…",
+    footer_copy:     "© 2025 LaSalle — All rights reserved.",
+    footer_privacy:  "Privacy Policy",
+    footer_contact:  "IT Department Contact"
+  },
+  en_us: {
+    page_title:      "LaSalle — Active Digital Portal",
+    subtitle:        "ACTIVE DIGITAL PORTAL",
+    status_label:    "Connected",
+    connected_title: "You are connected",
+    connected_msg:   "Your network access is active. You may browse freely.<br/>Click the button below to end your session.",
+    info_title:      "Network access active",
+    info_desc:       "LaSalle Avignon Network — Session in progress",
+    btn_logout:      "Sign out",
+    btn_loading:     "Signing out…",
+    footer_copy:     "© 2025 LaSalle — All rights reserved.",
+    footer_privacy:  "Privacy Policy",
+    footer_contact:  "IT Support"
+  },
+  de: {
+    page_title:      "LaSalle — Aktives digitales Portal",
+    subtitle:        "AKTIVES DIGITALES PORTAL",
+    status_label:    "Verbunden",
+    connected_title: "Sie sind verbunden",
+    connected_msg:   "Ihr Netzwerkzugang ist aktiv. Sie können frei surfen.<br/>Klicken Sie auf die Schaltfläche unten, um Ihre Sitzung zu beenden.",
+    info_title:      "Netzwerkzugang aktiv",
+    info_desc:       "LaSalle Avignon Netzwerk — Sitzung läuft",
+    btn_logout:      "Abmelden",
+    btn_loading:     "Abmelden…",
+    footer_copy:     "© 2025 LaSalle — Alle Rechte vorbehalten.",
+    footer_privacy:  "Datenschutzrichtlinie",
+    footer_contact:  "IT-Kontakt"
+  },
+  es: {
+    page_title:      "LaSalle — Portal Digital Activo",
+    subtitle:        "PORTAL DIGITAL ACTIVO",
+    status_label:    "Conectado",
+    connected_title: "Estás conectado",
+    connected_msg:   "Tu acceso a la red está activo. Puedes navegar libremente.<br/>Haz clic en el botón de abajo para cerrar tu sesión.",
+    info_title:      "Acceso a la red activo",
+    info_desc:       "Red LaSalle Avignon — Sesión en curso",
+    btn_logout:      "Cerrar sesión",
+    btn_loading:     "Cerrando sesión…",
+    footer_copy:     "© 2025 LaSalle — Todos los derechos reservados.",
+    footer_privacy:  "Política de privacidad",
+    footer_contact:  "Contacto informática"
+  },
+  it: {
+    page_title:      "LaSalle — Portale Digitale Attivo",
+    subtitle:        "PORTALE DIGITALE ATTIVO",
+    status_label:    "Connesso",
+    connected_title: "Sei connesso",
+    connected_msg:   "Il tuo accesso alla rete è attivo. Puoi navigare liberamente.<br/>Clicca il pulsante qui sotto per terminare la sessione.",
+    info_title:      "Accesso alla rete attivo",
+    info_desc:       "Rete LaSalle Avignon — Sessione in corso",
+    btn_logout:      "Disconnetti",
+    btn_loading:     "Disconnessione…",
+    footer_copy:     "© 2025 LaSalle — Tutti i diritti riservati.",
+    footer_privacy:  "Informativa sulla privacy",
+    footer_contact:  "Contatto IT"
+  },
+  ru: {
+    page_title:      "LaSalle — Активный цифровой портал",
+    subtitle:        "АКТИВНЫЙ ЦИФРОВОЙ ПОРТАЛ",
+    status_label:    "Подключён",
+    connected_title: "Вы подключены",
+    connected_msg:   "Ваш доступ к сети активен. Вы можете свободно просматривать интернет.<br/>Нажмите кнопку ниже, чтобы завершить сеанс.",
+    info_title:      "Доступ к сети активен",
+    info_desc:       "Сеть LaSalle Avignon — Сеанс активен",
+    btn_logout:      "Выйти",
+    btn_loading:     "Выход…",
+    footer_copy:     "© 2025 LaSalle — Все права защищены.",
+    footer_privacy:  "Политика конфиденциальности",
+    footer_contact:  "Контакт ИТ-отдела"
+  },
+  pt: {
+    page_title:      "LaSalle — Portal Digital Ativo",
+    subtitle:        "PORTAL DIGITAL ATIVO",
+    status_label:    "Ligado",
+    connected_title: "Está ligado",
+    connected_msg:   "O seu acesso à rede está ativo. Pode navegar livremente.<br/>Clique no botão abaixo para terminar a sessão.",
+    info_title:      "Acesso à rede ativo",
+    info_desc:       "Rede LaSalle Avignon — Sessão em curso",
+    btn_logout:      "Terminar sessão",
+    btn_loading:     "A terminar…",
+    footer_copy:     "© 2025 LaSalle — Todos os direitos reservados.",
+    footer_privacy:  "Política de privacidade",
+    footer_contact:  "Contacto informática"
+  },
+  nl: {
+    page_title:      "LaSalle — Actief digitaal portaal",
+    subtitle:        "ACTIEF DIGITAAL PORTAAL",
+    status_label:    "Verbonden",
+    connected_title: "U bent verbonden",
+    connected_msg:   "Uw netwerktoegang is actief. U kunt vrij surfen.<br/>Klik op de knop hieronder om uw sessie te beëindigen.",
+    info_title:      "Netwerktoegang actief",
+    info_desc:       "LaSalle Avignon Netwerk — Sessie actief",
+    btn_logout:      "Afmelden",
+    btn_loading:     "Afmelden…",
+    footer_copy:     "© 2025 LaSalle — Alle rechten voorbehouden.",
+    footer_privacy:  "Privacybeleid",
+    footer_contact:  "IT-contact"
+  },
+  ar: {
+    page_title:      "LaSalle — البوابة الرقمية النشطة",
+    subtitle:        "البوابة الرقمية النشطة",
+    status_label:    "متصل",
+    connected_title: "أنت متصل",
+    connected_msg:   "وصولك إلى الشبكة نشط. يمكنك التصفح بحرية.<br/>انقر على الزر أدناه لإنهاء جلستك.",
+    info_title:      "الوصول إلى الشبكة نشط",
+    info_desc:       "شبكة LaSalle Avignon — الجلسة جارية",
+    btn_logout:      "تسجيل الخروج",
+    btn_loading:     "جارٍ الخروج…",
+    footer_copy:     "© 2025 LaSalle — جميع الحقوق محفوظة.",
+    footer_privacy:  "سياسة الخصوصية",
+    footer_contact:  "التواصل مع قسم تقنية المعلومات"
+  },
+  zh: {
+    page_title:      "LaSalle — 活跃数字门户",
+    subtitle:        "活跃数字门户",
+    status_label:    "已连接",
+    connected_title: "您已连接",
+    connected_msg:   "您的网络访问已激活，可以自由浏览。<br/>点击下方按钮以结束您的会话。",
+    info_title:      "网络访问已激活",
+    info_desc:       "LaSalle Avignon 网络 — 会话进行中",
+    btn_logout:      "退出登录",
+    btn_loading:     "正在退出…",
+    footer_copy:     "© 2025 LaSalle — 版权所有。",
+    footer_privacy:  "隐私政策",
+    footer_contact:  "IT部门联系方式"
+  },
+  ja: {
+    page_title:      "LaSalle — アクティブデジタルポータル",
+    subtitle:        "アクティブデジタルポータル",
+    status_label:    "接続中",
+    connected_title: "接続されています",
+    connected_msg:   "ネットワークアクセスが有効です。自由に閲覧できます。<br/>セッションを終了するには下のボタンをクリックしてください。",
+    info_title:      "ネットワークアクセス有効",
+    info_desc:       "LaSalle Avignon ネットワーク — セッション進行中",
+    btn_logout:      "ログアウト",
+    btn_loading:     "ログアウト中…",
+    footer_copy:     "© 2025 LaSalle — 無断転載禁止。",
+    footer_privacy:  "プライバシーポリシー",
+    footer_contact:  "IT部門へのお問い合わせ"
+  }
+};
+
+let currentLang = 'fr';
+
+function setLang(lang) {
+  const t = translations[lang] || translations['fr'];
+  currentLang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  document.title = t.page_title;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) {
+      if (key === 'connected_msg') {
+        el.innerHTML = t[key];
+      } else {
+        el.textContent = t[key];
+      }
+    }
+  });
+}
+
+function handleLogout(form) {
+  const t = translations[currentLang] || translations['fr'];
+  const btn = document.getElementById('btn-logout');
+  const txt = document.getElementById('btn-logout-text');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'not-allowed';
+  }
+  if (txt) txt.textContent = t.btn_loading;
+
+  // pfSense gère la redirection après déconnexion.
+  // Fallback JS : si pfSense ne redirige pas dans les 3s, on force le retour vers le portail.
+  setTimeout(function() {
+    window.location.replace('$PORTAL_ACTION$');
+  }, 3000);
+
+  return true; // laisse le formulaire être soumis à pfSense
+}
+
+setLang('fr');
+</script>
+</body>
+</html>
