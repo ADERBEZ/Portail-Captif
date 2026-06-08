@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">LaSalle — Portail Numérique Actif</title>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+      :root {
+        --clr-bg:         #f4f6fb;
+        --clr-surface:    #ffffff;
+        --clr-primary:    #1A70A7;
+        --clr-rose:       #E1347E;
+        --clr-yellow:     #F7B825;
+        --clr-green:      #93C150;
+        --clr-accent:     #F7B825;
+        --clr-text:       #1c1f26;
+        --clr-muted:      #6b7280;
+        --clr-border:     #dde3ed;
+        --clr-input-bg:   #f5f7fb;
+        --clr-error:      #c0392b;
+        --clr-success:    #93C150;
+        --radius:         10px;
+        --shadow-card:    0 8px 40px rgba(26,112,167,0.13), 0 1.5px 6px rgba(0,0,0,0.06);
+        --shadow-btn:     0 4px 18px rgba(225,52,126,0.30);
+        --transition:     0.22s cubic-bezier(.4,0,.2,1);
+        --font-display:   'Playfair Display', Georgia, serif;
+        --font-body:      'DM Sans', 'Segoe UI', sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-size: 16px; scroll-behavior: smooth; }
+      body {
+        font-family: var(--font-body);
+        background: var(--clr-bg);
+        color: var(--clr-text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(135deg, rgba(26,112,167,0.06) 0%, transparent 50%),
+          linear-gradient(225deg, rgba(225,52,126,0.04) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+      body::after {
+        content: '';
+        position: fixed;
+        top: -120px; right: -120px;
+        width: 420px; height: 420px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(147,193,80,0.07) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .page-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px 24px;
+      }
+      .topbar {
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .lang-selector {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--clr-surface);
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      }
+      .lang-selector svg { color: var(--clr-primary); flex-shrink: 0; }
+      .lang-selector select {
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--clr-primary);
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding-right: 4px;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+      .lang-selector-arrow { color: var(--clr-muted); font-size: 0.65rem; pointer-events: none; }
+      .card {
+        width: 100%;
+        max-width: 460px;
+        background: var(--clr-surface);
+        border-radius: 18px;
+        box-shadow: var(--shadow-card);
+        border: 1px solid rgba(212,217,226,0.7);
+        overflow: hidden;
+        animation: slideUp 0.55s cubic-bezier(.22,1,.36,1) both;
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .card-header {
+        background: linear-gradient(135deg, #1A70A7 0%, #105686 40%, #0d4a75 100%);
+        padding: 36px 40px 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-header::before {
+        content: '';
+        position: absolute;
+        bottom: -50px; right: -50px;
+        width: 200px; height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(225,52,126,0.35) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .card-header::after {
+        content: '';
+        position: absolute;
+        top: -40px; left: -40px;
+        width: 160px; height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(247,184,37,0.30) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .logo-wrap { position: relative; z-index: 1; }
+      .logo-circle {
+        width: 92px; height: 92px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 24px rgba(0,0,0,0.22),
+          0 0 0 3px #ffffff,
+          0 0 0 6px #E1347E,
+          0 0 0 8px #F7B825,
+          0 0 0 10px #93C150,
+          0 0 0 12px #1A70A7;
+        overflow: hidden;
+      }
+      .logo-circle img {
+        width: 84px; height: 84px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .school-name { position: relative; z-index: 1; text-align: center; }
+      .school-name h1 {
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: #ffffff;
+        letter-spacing: 0.01em;
+        line-height: 1.25;
+      }
+      .school-name p {
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.90);
+        font-weight: 600;
+        margin-top: 2px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .accent-bar {
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #E1347E 0%, #F7B825 33%, #93C150 66%, #1A70A7 100%);
+        background-size: 250%;
+        animation: shimmer 5s linear infinite;
+      }
+      @keyframes shimmer {
+        0%   { background-position: 0% 50%; }
+        100% { background-position: 250% 50%; }
+      }
+      .card-body { padding: 36px 40px 32px; }
+      .card-body h2 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        color: var(--clr-primary);
+        margin-bottom: 24px;
+        font-weight: 600;
+      }
+      .form-group { margin-bottom: 18px; }
+      .form-group label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--clr-primary);
+        margin-bottom: 7px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .input-wrap { position: relative; display: flex; align-items: center; }
+      .input-wrap .icon {
+        position: absolute;
+        left: 13px;
+        color: var(--clr-muted);
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+        transition: color var(--transition);
+      }
+      .input-wrap input {
+        width: 100%;
+        padding: 12px 14px 12px 40px;
+        background: var(--clr-input-bg);
+        border: 1.5px solid var(--clr-border);
+        border-radius: var(--radius);
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        color: var(--clr-text);
+        transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        outline: none;
+      }
+      .input-wrap input::placeholder { color: #b0b7c3; }
+      .input-wrap input:focus {
+        border-color: var(--clr-primary);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(26,58,107,0.10);
+      }
+      .input-wrap:focus-within .icon { color: var(--clr-primary); }
+      .pw-toggle {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--clr-muted);
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color var(--transition);
+      }
+      .pw-toggle:hover { color: var(--clr-primary); }
+      .form-options {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 4px 0 22px;
+      }
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(10,20,50,0.55);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-overlay.open { display: flex; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      .modal-box {
+        background: var(--clr-surface);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.1);
+        padding: 36px 32px 28px;
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+        animation: slideUp 0.28s cubic-bezier(.22,1,.36,1) both;
+        border: 1px solid var(--clr-border);
+      }
+      .modal-icon {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: rgba(26,58,107,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        color: var(--clr-primary);
+      }
+      .modal-box h3 { font-family: var(--font-display); font-size: 1.15rem; color: var(--clr-primary); margin-bottom: 10px; }
+      .modal-box p { font-size: 0.88rem; color: var(--clr-muted); line-height: 1.6; margin-bottom: 18px; }
+      .modal-contact {
+        background: var(--clr-input-bg);
+        border: 1px solid var(--clr-border);
+        border-left: 4px solid var(--clr-yellow);
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 22px;
+        font-size: 0.90rem;
+        color: var(--clr-text);
+        line-height: 1.6;
+      }
+      .modal-contact strong { font-size: 1rem; color: var(--clr-primary); }
+      .modal-close-btn {
+        background: var(--clr-primary);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 28px;
+        font-family: var(--font-body);
+        font-size: 0.90rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background var(--transition), transform var(--transition);
+      }
+      .modal-close-btn:hover { background: #105686; transform: translateY(-1px); }
+      .forgot-link {
+        font-size: 0.82rem;
+        color: var(--clr-primary);
+        text-decoration: none;
+        font-weight: 500;
+        opacity: 0.8;
+        transition: opacity var(--transition);
+      }
+      .forgot-link:hover { opacity: 1; text-decoration: underline; }
+      .btn-submit {
+        margin-top: 20px;
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(90deg, #E1347E 0%, #F7B825 33%, #93C150 66%, #1A70A7 100%);
+        background-size: 200% 100%;
+        background-position: 0% 0%;
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+        transition: background-position 0.5s ease, box-shadow var(--transition), transform var(--transition);
+        text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+      }
+      .btn-submit::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 55%);
+        pointer-events: none;
+      }
+      .btn-submit:hover {
+        background-position: 100% 0%;
+        box-shadow: 0 6px 24px rgba(225,52,126,0.35), 0 2px 8px rgba(26,112,167,0.20);
+        transform: translateY(-2px);
+      }
+      .btn-submit:active { transform: translateY(0); box-shadow: none; }
+      .alert {
+        display: none;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        margin-bottom: 16px;
+        font-weight: 500;
+      }
+      .alert.error  { background: #fde8e8; color: var(--clr-error); border-left: 3px solid var(--clr-error); display: block; }
+      .alert.success{ background: #e6f4ec; color: var(--clr-success); border-left: 3px solid var(--clr-success); display: block; }
+      .charter-wrap {
+        margin-top: 30px;
+        border-top: 1.5px solid var(--clr-border);
+        padding-top: 22px;
+      }
+      .charter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: var(--clr-input-bg);
+        border: 1px solid var(--clr-border);
+        transition: background var(--transition), border-color var(--transition);
+      }
+      .charter-toggle:hover { background: #edf0f5; border-color: var(--clr-primary); }
+      .charter-toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: var(--clr-primary);
+      }
+      .charter-toggle svg { flex-shrink: 0; }
+      .charter-arrow { color: var(--clr-muted); font-size: 0.7rem; transition: transform var(--transition); }
+      .charter-toggle.open .charter-arrow { transform: rotate(180deg); }
+      .charter-box { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(.4,0,.2,1); }
+      .charter-box.open { max-height: 200px; }
+      .charter-file-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: var(--clr-input-bg);
+        border: 1px solid var(--clr-border);
+        border-radius: 8px;
+      }
+      .charter-file-info { display: flex; align-items: center; gap: 8px; min-width: 0; }
+      .charter-file-info svg { color: var(--clr-primary); flex-shrink: 0; }
+      .charter-filename { font-size: 0.80rem; font-weight: 500; color: var(--clr-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        background: var(--clr-primary);
+        color: #fff;
+        border-radius: 6px;
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: background var(--transition), transform var(--transition);
+      }
+      .btn-download:hover { background: #105686; transform: translateY(-1px); }
+      .btn-download svg { flex-shrink: 0; }
+      .charter-accept {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 12px;
+        font-size: 0.80rem;
+        color: var(--clr-muted);
+        line-height: 1.5;
+      }
+      .charter-accept input[type="checkbox"] {
+        accent-color: var(--clr-primary);
+        width: 15px; height: 15px;
+        margin-top: 1px;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      footer { margin-top: 24px; font-size: 0.75rem; color: var(--clr-muted); text-align: center; line-height: 1.7; }
+      footer a { color: var(--clr-primary); text-decoration: none; font-weight: 500; opacity: 0.8; }
+      footer a:hover { opacity: 1; text-decoration: underline; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: var(--clr-bg); }
+      ::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 4px; }
+      @media (max-width: 520px) {
+        .card-header { padding: 28px 24px 22px; }
+        .card-body   { padding: 28px 24px 26px; }
+        .card { border-radius: 14px; }
+        .form-options { flex-direction: column; align-items: flex-start; gap: 8px; }
+      }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <div class="topbar">
+    <div class="lang-selector">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10
+                 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <select id="lang-select" onchange="setLang(this.value)" aria-label="Langue / Language">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="en_us">🇺🇸 American English</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="pt">🇵🇹 Português</option>
+        <option value="nl">🇳🇱 Nederlands</option>
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ja">🇯🇵 日本語</option>
+      </select>
+      <span class="lang-selector-arrow">▼</span>
+    </div>
+  </div>
+
+  <div class="card" role="main">
+
+    <div class="card-header">
+      <div class="logo-wrap">
+        <div class="logo-circle">
+          <!-- ✅ IMAGE MODIFIÉE : fichier externe au lieu du base64 -->
+          <img src="logo_lasalle_avi.jpg" alt="Logo LaSalle Avignon"
+               style="width:82px;height:82px;object-fit:contain;border-radius:50%;" />
+        </div>
+      </div>
+      <div class="school-name">
+        <p data-i18n="subtitle">PORTAIL CAPTIF NUMÉRIQUE</p>
+      </div>
+    </div>
+
+    <div class="accent-bar"></div>
+
+    <div class="card-body">
+      <h2 data-i18n="login_title">Connexion</h2>
+
+      <div class="alert" id="alert-box" role="alert"></div>
+
+      <form id="login-form" method="post" action="$PORTAL_ACTION$" onsubmit="return handleLogin(event);">
+
+        <!-- Après auth réussie → pfSense redirige vers sa propre URL (page logout) -->
+        <input type="hidden" name="redirurl" value="$PORTAL_ACTION$" />
+        <input type="hidden" name="zone" value="$PORTAL_ZONE$" />
+
+        <div class="form-group">
+          <label for="username" data-i18n="label_id">Identifiant</label>
+          <div class="input-wrap">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <input type="text" id="username" name="auth_user" autocomplete="username"
+                   data-i18n-ph="ph_id" placeholder="Votre identifiant" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" data-i18n="label_pw">Mot de passe</label>
+          <div class="input-wrap">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input type="password" id="password" name="auth_pass" autocomplete="current-password"
+                   data-i18n-ph="ph_pw" placeholder="Votre mot de passe" required />
+            <button type="button" class="pw-toggle" id="pw-toggle"
+                    onclick="togglePassword()" aria-label="Afficher/masquer le mot de passe">
+              <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1
+                         5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16
+                         3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <a href="#" class="forgot-link" data-i18n="forgot" onclick="showForgotModal(event)">Mot de passe oublié ?</a>
+        </div>
+
+        <div class="charter-wrap">
+          <div class="charter-toggle" id="charter-toggle" onclick="toggleCharter()" role="button"
+               tabindex="0" aria-expanded="false" aria-controls="charter-box">
+            <span class="charter-toggle-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              <span data-i18n="charter_toggle">Charte informatique</span>
+            </span>
+            <span class="charter-arrow">▼</span>
+          </div>
+
+          <div class="charter-box" id="charter-box">
+            <div class="charter-file-row">
+              <div class="charter-file-info">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span class="charter-filename">Charte Informatique La Salle.pdf</span>
+              </div>
+              <a href="Charte Informatique La Salle.pdf" download class="btn-download" aria-label="Télécharger la charte">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span data-i18n="charter_dl">Télécharger</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="charter-accept">
+          <input type="checkbox" id="charter-check" />
+          <label for="charter-check" data-i18n="charter_accept">
+            J'ai lu et j'accepte la charte informatique de l'établissement.
+          </label>
+        </div>
+
+        <button class="btn-submit" id="btn-submit" type="submit" name="accept" value="Continue">
+          <span data-i18n="btn_login">Se connecter</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <div id="forgot-modal" class="modal-overlay" onclick="closeForgotModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <h3 id="modal-title" data-i18n="modal_title">Mot de passe oublié</h3>
+      <p data-i18n="modal_msg">Pour réinitialiser votre mot de passe, veuillez contacter le responsable informatique&nbsp;:</p>
+      <div class="modal-contact">
+        <strong>M. PILOT</strong><br/>
+        <span data-i18n="modal_role">Responsable informatique</span>
+      </div>
+      <button class="modal-close-btn" onclick="document.getElementById('forgot-modal').classList.remove('open')" data-i18n="modal_close">Fermer</button>
+    </div>
+  </div>
+
+  <footer>
+    <span data-i18n="footer_copy">© 2025 Établissement LaSalle — Tous droits réservés.</span><br/>
+    <a href="#" data-i18n="footer_privacy">Politique de confidentialité</a> ·
+    <a href="#" data-i18n="footer_contact">Contact DSI</a>
+  </footer>
+
+</div>
+
+<script>
+const translations = {
+  fr: {
+    page_title:"LaSalle — Portail Numérique Actif",subtitle:"PORTAIL NUMÉRIQUE ACTIF",login_title:"Connexion",
+    label_id:"Identifiant",label_pw:"Mot de passe",ph_id:"Votre identifiant",ph_pw:"Votre mot de passe",
+    forgot:"Mot de passe oublié ?",btn_login:"Se connecter",charter_toggle:"Charte informatique",
+    charter_accept:"J'ai lu et j'accepte la charte informatique de l'établissement.",charter_dl:"Télécharger",
+    footer_copy:"© 2025 Établissement LaSalle — Tous droits réservés.",footer_privacy:"Politique de confidentialité",
+    footer_contact:"Contact DSI",err_fields:"Veuillez remplir tous les champs.",
+    err_charter:"Veuillez lire et accepter la charte informatique avant de vous connecter.",
+    err_credentials:"Identifiant ou mot de passe incorrect.",modal_title:"Mot de passe oublié",
+    modal_msg:"Pour réinitialiser votre mot de passe, veuillez contacter le responsable informatique :",
+    modal_role:"Responsable informatique",modal_close:"Fermer"
+  },
+  en: {
+    page_title:"LaSalle — Active Digital Portal",subtitle:"ACTIVE DIGITAL PORTAL",login_title:"Login",
+    label_id:"Username",label_pw:"Password",ph_id:"Your username",ph_pw:"Your password",
+    forgot:"Forgot password?",btn_login:"Sign in",charter_toggle:"IT Charter",
+    charter_accept:"I have read and accept the institution's IT Charter.",charter_dl:"Download",
+    footer_copy:"© 2025 LaSalle — All rights reserved.",footer_privacy:"Privacy Policy",
+    footer_contact:"IT Department Contact",err_fields:"Please fill in all fields.",
+    err_charter:"Please read and accept the IT Charter before signing in.",
+    err_credentials:"Incorrect username or password.",modal_title:"Forgot password",
+    modal_msg:"To reset your password, please contact the IT administrator:",
+    modal_role:"IT Administrator",modal_close:"Close"
+  },
+  en_us: {
+    page_title:"LaSalle — Active Digital Portal",subtitle:"ACTIVE DIGITAL PORTAL",login_title:"Sign In",
+    label_id:"Username",label_pw:"Password",ph_id:"Enter your username",ph_pw:"Enter your password",
+    forgot:"Forgot password?",btn_login:"Sign In",charter_toggle:"Acceptable Use Policy",
+    charter_accept:"I have read and agree to the school's Acceptable Use Policy.",charter_dl:"Download",
+    footer_copy:"© 2025 LaSalle — All rights reserved.",footer_privacy:"Privacy Policy",
+    footer_contact:"IT Support",err_fields:"Please complete all fields.",
+    err_charter:"Please read and agree to the Acceptable Use Policy before signing in.",
+    err_credentials:"Incorrect username or password.",modal_title:"Forgot password",
+    modal_msg:"To reset your password, please contact the IT administrator:",
+    modal_role:"IT Administrator",modal_close:"Close"
+  },
+  de: {
+    page_title:"LaSalle — Aktives digitales Portal",subtitle:"AKTIVES DIGITALES PORTAL",login_title:"Anmeldung",
+    label_id:"Benutzername",label_pw:"Passwort",ph_id:"Ihr Benutzername",ph_pw:"Ihr Passwort",
+    forgot:"Passwort vergessen?",btn_login:"Anmelden",charter_toggle:"IT-Nutzungsrichtlinie",
+    charter_accept:"Ich habe die IT-Nutzungsrichtlinie gelesen und akzeptiere sie.",charter_dl:"Herunterladen",
+    footer_copy:"© 2025 LaSalle — Alle Rechte vorbehalten.",footer_privacy:"Datenschutzrichtlinie",
+    footer_contact:"IT-Kontakt",err_fields:"Bitte füllen Sie alle Felder aus.",
+    err_charter:"Bitte lesen und akzeptieren Sie die IT-Nutzungsrichtlinie vor der Anmeldung.",
+    err_credentials:"Falscher Benutzername oder falsches Passwort.",modal_title:"Passwort vergessen",
+    modal_msg:"Um Ihr Passwort zurückzusetzen, wenden Sie sich bitte an den IT-Verantwortlichen:",
+    modal_role:"IT-Verantwortlicher",modal_close:"Schließen"
+  },
+  es: {
+    page_title:"LaSalle — Portal Digital Activo",subtitle:"PORTAL DIGITAL ACTIVO",login_title:"Iniciar sesión",
+    label_id:"Usuario",label_pw:"Contraseña",ph_id:"Su nombre de usuario",ph_pw:"Su contraseña",
+    forgot:"¿Olvidó su contraseña?",btn_login:"Entrar",charter_toggle:"Carta informática",
+    charter_accept:"He leído y acepto la carta informática del centro.",charter_dl:"Descargar",
+    footer_copy:"© 2025 LaSalle — Todos los derechos reservados.",footer_privacy:"Política de privacidad",
+    footer_contact:"Contacto informática",err_fields:"Por favor, complete todos los campos.",
+    err_charter:"Por favor, lea y acepte la carta informática antes de iniciar sesión.",
+    err_credentials:"Usuario o contraseña incorrectos.",modal_title:"Contraseña olvidada",
+    modal_msg:"Para restablecer su contraseña, contacte al responsable informático:",
+    modal_role:"Responsable informático",modal_close:"Cerrar"
+  },
+  it: {
+    page_title:"LaSalle — Portale Digitale Attivo",subtitle:"PORTALE DIGITALE ATTIVO",login_title:"Accesso",
+    label_id:"Nome utente",label_pw:"Password",ph_id:"Il tuo nome utente",ph_pw:"La tua password",
+    forgot:"Password dimenticata?",btn_login:"Accedi",charter_toggle:"Carta informatica",
+    charter_accept:"Ho letto e accetto la carta informatica dell'istituto.",charter_dl:"Scarica",
+    footer_copy:"© 2025 LaSalle — Tutti i diritti riservati.",footer_privacy:"Informativa sulla privacy",
+    footer_contact:"Contatto IT",err_fields:"Si prega di compilare tutti i campi.",
+    err_charter:"Si prega di leggere e accettare la carta informatica prima di accedere.",
+    err_credentials:"Nome utente o password errati.",modal_title:"Password dimenticata",
+    modal_msg:"Per reimpostare la password, contattare il responsabile informatico:",
+    modal_role:"Responsabile informatico",modal_close:"Chiudi"
+  },
+  ru: {
+    page_title:"LaSalle — Активный цифровой портал",subtitle:"АКТИВНЫЙ ЦИФРОВОЙ ПОРТАЛ",login_title:"Вход в систему",
+    label_id:"Логин",label_pw:"Пароль",ph_id:"Ваш логин",ph_pw:"Ваш пароль",
+    forgot:"Забыли пароль?",btn_login:"Войти",charter_toggle:"Устав об использовании ИТ",
+    charter_accept:"Я прочитал(а) и принимаю Устав об использовании ИТ.",charter_dl:"Скачать",
+    footer_copy:"© 2025 LaSalle — Все права защищены.",footer_privacy:"Политика конфиденциальности",
+    footer_contact:"Контакт ИТ-отдела",err_fields:"Пожалуйста, заполните все поля.",
+    err_charter:"Пожалуйста, прочитайте и примите Устав перед входом.",
+    err_credentials:"Неверный логин или пароль.",modal_title:"Забыли пароль",
+    modal_msg:"Для сброса пароля обратитесь к ответственному за ИТ:",
+    modal_role:"Ответственный за ИТ",modal_close:"Закрыть"
+  },
+  pt: {
+    page_title:"LaSalle — Portal Digital Ativo",subtitle:"PORTAL DIGITAL ATIVO",login_title:"Entrar",
+    label_id:"Utilizador",label_pw:"Palavra-passe",ph_id:"O seu utilizador",ph_pw:"A sua palavra-passe",
+    forgot:"Esqueceu a palavra-passe?",btn_login:"Entrar",charter_toggle:"Carta informática",
+    charter_accept:"Li e aceito a carta informática do estabelecimento.",charter_dl:"Baixar",
+    footer_copy:"© 2025 LaSalle — Todos os direitos reservados.",footer_privacy:"Política de privacidade",
+    footer_contact:"Contacto informática",err_fields:"Por favor, preencha todos os campos.",
+    err_charter:"Por favor, leia e aceite a carta informática antes de entrar.",
+    err_credentials:"Utilizador ou palavra-passe incorretos.",modal_title:"Palavra-passe esquecida",
+    modal_msg:"Para redefinir a sua palavra-passe, contacte o responsável informático:",
+    modal_role:"Responsável informático",modal_close:"Fechar"
+  },
+  nl: {
+    page_title:"LaSalle — Actief digitaal portaal",subtitle:"ACTIEF DIGITAAL PORTAAL",login_title:"Aanmelden",
+    label_id:"Gebruikersnaam",label_pw:"Wachtwoord",ph_id:"Uw gebruikersnaam",ph_pw:"Uw wachtwoord",
+    forgot:"Wachtwoord vergeten?",btn_login:"Aanmelden",charter_toggle:"IT-gebruiksbeleid",
+    charter_accept:"Ik heb het IT-gebruiksbeleid gelezen en ga ermee akkoord.",charter_dl:"Downloaden",
+    footer_copy:"© 2025 LaSalle — Alle rechten voorbehouden.",footer_privacy:"Privacybeleid",
+    footer_contact:"IT-contact",err_fields:"Vul alle velden in.",
+    err_charter:"Lees en accepteer het IT-gebruiksbeleid voor u zich aanmeldt.",
+    err_credentials:"Onjuiste gebruikersnaam of wachtwoord.",modal_title:"Wachtwoord vergeten",
+    modal_msg:"Neem contact op met de IT-verantwoordelijke om uw wachtwoord te resetten:",
+    modal_role:"IT-verantwoordelijke",modal_close:"Sluiten"
+  },
+  ar: {
+    page_title:"LaSalle — البوابة الرقمية النشطة",subtitle:"البوابة الرقمية النشطة",login_title:"تسجيل الدخول",
+    label_id:"اسم المستخدم",label_pw:"كلمة المرور",ph_id:"أدخل اسم المستخدم",ph_pw:"أدخل كلمة المرور",
+    forgot:"هل نسيت كلمة المرور؟",btn_login:"دخول",charter_toggle:"ميثاق الاستخدام",
+    charter_accept:"لقد قرأت ووافقت على ميثاق الاستخدام.",charter_dl:"تنزيل",
+    footer_copy:"© 2025 LaSalle — جميع الحقوق محفوظة.",footer_privacy:"سياسة الخصوصية",
+    footer_contact:"التواصل مع قسم تقنية المعلومات",err_fields:"يرجى ملء جميع الحقول.",
+    err_charter:"يرجى قراءة وقبول ميثاق الاستخدام قبل تسجيل الدخول.",
+    err_credentials:"اسم المستخدم أو كلمة المرور غير صحيحة.",modal_title:"نسيت كلمة المرور",
+    modal_msg:"لإعادة تعيين كلمة المرور، يرجى التواصل مع المسؤول عن تقنية المعلومات:",
+    modal_role:"مسؤول تقنية المعلومات",modal_close:"إغلاق"
+  },
+  zh: {
+    page_title:"LaSalle — 活跃数字门户",subtitle:"活跃数字门户",login_title:"登录",
+    label_id:"用户名",label_pw:"密码",ph_id:"请输入用户名",ph_pw:"请输入密码",
+    forgot:"忘记密码？",btn_login:"登录",charter_toggle:"信息技术使用规范",
+    charter_accept:"我已阅读并接受学校信息技术使用规范。",charter_dl:"下载",
+    footer_copy:"© 2025 LaSalle — 版权所有。",footer_privacy:"隐私政策",
+    footer_contact:"IT部门联系方式",err_fields:"请填写所有字段。",
+    err_charter:"请在登录前阅读并接受信息技术使用规范。",
+    err_credentials:"用户名或密码不正确。",modal_title:"忘记密码",
+    modal_msg:"请联系IT负责人重置密码：",modal_role:"IT负责人",modal_close:"关闭"
+  },
+  ja: {
+    page_title:"LaSalle — アクティブデジタルポータル",subtitle:"アクティブデジタルポータル",login_title:"ログイン",
+    label_id:"ユーザー名",label_pw:"パスワード",ph_id:"ユーザー名を入力",ph_pw:"パスワードを入力",
+    forgot:"パスワードを忘れた方",btn_login:"ログイン",charter_toggle:"IT利用規約",
+    charter_accept:"学校のIT利用規約を読み、同意します。",charter_dl:"ダウンロード",
+    footer_copy:"© 2025 LaSalle — 無断転載禁止。",footer_privacy:"プライバシーポリシー",
+    footer_contact:"IT部門へのお問い合わせ",err_fields:"すべてのフィールドを入力してください。",
+    err_charter:"ログイン前にIT利用規約をお読みの上、同意してください。",
+    err_credentials:"ユーザー名またはパスワードが正しくありません。",modal_title:"パスワードを忘れた方",
+    modal_msg:"パスワードのリセットは、IT担当者にご連絡ください：",
+    modal_role:"IT担当者",modal_close:"閉じる"
+  }
+};
+
+let currentLang = 'fr';
+
+function setLang(lang) {
+  const t = translations[lang] || translations['fr'];
+  currentLang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  document.title = t.page_title;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  hideAlert();
+}
+
+function showForgotModal(e) {
+  e.preventDefault();
+  const t = translations[currentLang] || translations['fr'];
+  document.querySelector('#forgot-modal [data-i18n="modal_title"]').textContent = t.modal_title;
+  document.querySelector('#forgot-modal [data-i18n="modal_msg"]').textContent = t.modal_msg;
+  document.querySelector('#forgot-modal [data-i18n="modal_role"]').textContent = t.modal_role;
+  document.querySelector('#forgot-modal [data-i18n="modal_close"]').textContent = t.modal_close;
+  document.getElementById('forgot-modal').classList.add('open');
+}
+
+function closeForgotModal(e) {
+  if (e.target === document.getElementById('forgot-modal'))
+    document.getElementById('forgot-modal').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('forgot-modal').classList.remove('open');
+});
+
+function togglePassword() {
+  const input = document.getElementById('password');
+  const eyeOpen = document.getElementById('eye-open');
+  const eyeClosed = document.getElementById('eye-closed');
+  if (input.type === 'password') {
+    input.type = 'text'; eyeOpen.style.display = 'none'; eyeClosed.style.display = 'block';
+  } else {
+    input.type = 'password'; eyeOpen.style.display = 'block'; eyeClosed.style.display = 'none';
+  }
+}
+
+function toggleCharter() {
+  const box = document.getElementById('charter-box');
+  const toggle = document.getElementById('charter-toggle');
+  const isOpen = box.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', isOpen);
+}
+
+document.getElementById('charter-toggle').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCharter(); }
+});
+
+function showAlert(msg, type) {
+  const el = document.getElementById('alert-box');
+  el.textContent = msg;
+  el.className = 'alert ' + type;
+}
+
+function hideAlert() {
+  const el = document.getElementById('alert-box');
+  el.className = 'alert';
+  el.textContent = '';
+}
+
+function handleLogin(e) {
+  const t = translations[currentLang] || translations['fr'];
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const charterChecked = document.getElementById('charter-check').checked;
+  hideAlert();
+  if (!username || !password) {
+    showAlert(t.err_fields, 'error');
+    if (e) e.preventDefault();
+    return false;
+  }
+  if (!charterChecked) {
+    showAlert(t.err_charter, 'error');
+    const box = document.getElementById('charter-box');
+    if (!box.classList.contains('open')) toggleCharter();
+    if (e) e.preventDefault();
+    return false;
+  }
+  const btn = document.getElementById('btn-submit');
+  if (btn) btn.querySelector('span').textContent = '⏳';
+  return true;
+}
+
+setLang('fr');
+</script>
+</body>
+</html>
